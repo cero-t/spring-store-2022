@@ -22,10 +22,6 @@
 	</properties>
 
 	<modules>
-		<module>cart/cart-client</module>
-		<module>cart/cart-domain</module>
-		<module>cart/cart-service</module>
-
 		<module>item/item-client</module>
 		<module>item/item-domain</module>
 		<module>item/item-service</module>
@@ -33,6 +29,10 @@
 		<module>stock/stock-client</module>
 		<module>stock/stock-domain</module>
 		<module>stock/stock-service</module>
+
+		<module>cart/cart-client</module>
+		<module>cart/cart-domain</module>
+		<module>cart/cart-service</module>
 
 		<module>payment/payment-client</module>
 		<module>payment/payment-domain</module>
@@ -44,9 +44,8 @@
 
 		<module>delivery/delivery-service</module>
 
-		<module>messaging</module>
-
 		<module>bff</module>
+		<module>messaging</module>
 	</modules>
 
 	<dependencyManagement>
@@ -71,12 +70,4 @@
 		</dependencies>
 	</dependencyManagement>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
 </project>
