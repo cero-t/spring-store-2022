@@ -20,12 +20,10 @@
 		<dependency>
 			<groupId>ninja.cero.store</groupId>
 			<artifactId>cart-domain</artifactId>
-			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>ninja.cero.store</groupId>
 			<artifactId>item-client</artifactId>
-			<version>1.0.0</version>
 		</dependency>
 
 		<dependency>

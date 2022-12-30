@@ -5,8 +5,8 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.0.0</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<version>3.0.1</version>
+		<relativePath/>
 	</parent>
 
 	<groupId>ninja.cero.store</groupId>
@@ -50,6 +50,57 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>ninja.cero.store</groupId>
+				<artifactId>item-client</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+			<dependency>
+				<groupId>ninja.cero.store</groupId>
+				<artifactId>item-domain</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+			<dependency>
+				<groupId>ninja.cero.store</groupId>
+				<artifactId>stock-client</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+			<dependency>
+				<groupId>ninja.cero.store</groupId>
+				<artifactId>stock-domain</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+			<dependency>
+				<groupId>ninja.cero.store</groupId>
+				<artifactId>cart-client</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+			<dependency>
+				<groupId>ninja.cero.store</groupId>
+				<artifactId>cart-domain</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+			<dependency>
+				<groupId>ninja.cero.store</groupId>
+				<artifactId>payment-client</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+			<dependency>
+				<groupId>ninja.cero.store</groupId>
+				<artifactId>payment-domain</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+			<dependency>
+				<groupId>ninja.cero.store</groupId>
+				<artifactId>order-client</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+			<dependency>
+				<groupId>ninja.cero.store</groupId>
+				<artifactId>order-domain</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-dependencies</artifactId>

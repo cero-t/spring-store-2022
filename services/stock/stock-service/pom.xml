@@ -20,7 +20,6 @@
 		<dependency>
 			<groupId>ninja.cero.store</groupId>
 			<artifactId>stock-domain</artifactId>
-			<version>1.0.0</version>
 		</dependency>
 
 		<dependency>

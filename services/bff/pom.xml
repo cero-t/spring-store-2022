@@ -20,22 +20,18 @@
 		<dependency>
 			<groupId>ninja.cero.store</groupId>
 			<artifactId>item-client</artifactId>
-			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>ninja.cero.store</groupId>
 			<artifactId>cart-client</artifactId>
-			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>ninja.cero.store</groupId>
 			<artifactId>stock-client</artifactId>
-			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>ninja.cero.store</groupId>
 			<artifactId>order-client</artifactId>
-			<version>1.0.0</version>
 		</dependency>
 
 		<dependency>

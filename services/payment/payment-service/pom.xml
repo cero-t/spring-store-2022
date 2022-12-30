@@ -20,12 +20,10 @@
 		<dependency>
 			<groupId>ninja.cero.store</groupId>
 			<artifactId>payment-domain</artifactId>
-			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>ninja.cero.store</groupId>
 			<artifactId>order-domain</artifactId>
-			<version>1.0.0</version>
 		</dependency>
 
 		<dependency>
