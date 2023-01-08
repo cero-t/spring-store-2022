@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cart-service-deploy
+  labels:
+    app: cart-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cart-service
+  template:
+    metadata:
+      labels:
+        app: cart-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9003"
+        prometheus.io/path: /actuator/prometheus
+    spec:
+      containers:
+      - name: cart-service
+        image: cart-service:1.0.0
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: store.urls.item
+          value: "http://item-service-svc:9001"
+        - name: logging.config
+          value: ""
+        - name: management.zipkin.tracing.endpoint
+          value: "http://tempo:9411/api/v2/spans"
+        ports:
+        - containerPort: 9003
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cart-service-svc
+  labels:
+    app: cart-service
+spec:
+  selector:
+    app: cart-service
+  ports:
+  - protocol: TCP
+    port: 9003
+    targetPort: 9003
+  type: LoadBalancer

@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-service-deploy
+  labels:
+    app: order-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order-service
+  template:
+    metadata:
+      labels:
+        app: order-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9005"
+        prometheus.io/path: /actuator/prometheus
+    spec:
+      containers:
+      - name: order-service
+        image: order-service:1.0.0
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: store.urls.stock
+          value: "http://stock-service-svc:9002"
+        - name: store.urls.cart
+          value: "http://cart-service-svc:9003"
+        - name: store.urls.payment
+          value: "http://payment-service-svc:9004"
+        - name: store.urls.order-process
+          value: "http://messaging-svc:9010/order-process"
+        - name: logging.config
+          value: ""
+        - name: management.zipkin.tracing.endpoint
+          value: "http://tempo:9411/api/v2/spans"
+        ports:
+        - containerPort: 9005
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-service-svc
+  labels:
+    app: order-service
+spec:
+  selector:
+    app: order-service
+  ports:
+  - protocol: TCP
+    port: 9005
+    targetPort: 9005
+  type: LoadBalancer

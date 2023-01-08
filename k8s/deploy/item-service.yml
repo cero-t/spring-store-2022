@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: item-service-deploy
+  labels:
+    app: item-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: item-service
+  template:
+    metadata:
+      labels:
+        app: item-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9001"
+        prometheus.io/path: /actuator/prometheus
+    spec:
+      containers:
+      - name: item-service
+        image: item-service:1.0.0
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: logging.config
+          value: ""
+        - name: management.zipkin.tracing.endpoint
+          value: "http://tempo:9411/api/v2/spans"
+        ports:
+        - containerPort: 9001
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: item-service-svc
+  labels:
+    app: item-service
+spec:
+  selector:
+    app: item-service
+  ports:
+  - protocol: TCP
+    port: 9001
+    targetPort: 9001
+  type: LoadBalancer

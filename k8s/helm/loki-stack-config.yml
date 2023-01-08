@@ -1,0 +1,42 @@
+loki:
+  datasource: # override Grafana settings to link from Loki view to Tempo view
+    jsonData: |
+      derivedFields:
+      - datasourceUid: Tempo
+        matcherRegex: \[.+?,(.+?),
+        name: TraceID
+        url: $${__value.raw}
+
+grafana:
+  enabled: true
+  grafana.ini:
+    auth: # skip login form
+      disable_login_form: true
+      disable_signout_menu: true
+    auth.anonymous:
+      enabled: true
+      org_role: Admin
+  datasources:
+    datasources-tempo.yaml:
+      apiVersion: 1
+      datasources:
+      - name: Tempo
+        type: tempo
+        url: http://tempo:3100
+        access: proxy
+        isDefault: false
+        jsonData: # link from Tempo view to Loki view, but doesn't work fine?
+          httpMethod: GET
+          tracesToLogs:
+            datasourceUid: 'Loki'
+          nodeGraph:
+            enabled: true
+prometheus:
+  enabled: true
+  nodeExporter:
+    hostRootfs: false # avoid node-exporter crashes - https://github.com/prometheus-community/helm-charts/issues/467
+
+promtail:
+  config:
+    clients:
+    - url: http://{{- if contains "loki" .Release.Name -}}{{ .Release.Name }}{{- else -}}{{ .Release.Name }}-loki{{- end}}:3100/loki/api/v1/push # avoid no such host error - https://github.com/grafana/helm-charts/issues/2102

@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: messaging-deploy
+  labels:
+    app: messaging
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: messaging
+  template:
+    metadata:
+      labels:
+        app: messaging
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9010"
+        prometheus.io/path: /actuator/prometheus
+    spec:
+      containers:
+      - name: messaging
+        image: messaging:1.0.0
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: spring.rabbitmq.host
+          value: rabbitmq-svc
+        - name: store.messaging.destinations.order-process
+          value: http://payment-service-svc:9004/order,http://delivery-service-svc:9006
+        - name: logging.config
+          value: ""
+        - name: management.zipkin.tracing.endpoint
+          value: "http://tempo:9411/api/v2/spans"
+        ports:
+        - containerPort: 9010
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: messaging-svc
+  labels:
+    app: messaging
+spec:
+  selector:
+    app: messaging
+  ports:
+  - protocol: TCP
+    port: 9010
+    targetPort: 9010
+  type: LoadBalancer

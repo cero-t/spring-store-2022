@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: delivery-service-deploy
+  labels:
+    app: delivery-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: delivery-service
+  template:
+    metadata:
+      labels:
+        app: delivery-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9006"
+        prometheus.io/path: /actuator/prometheus
+    spec:
+      containers:
+      - name: delivery-service
+        image: delivery-service:1.0.0
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: logging.config
+          value: ""
+        - name: management.zipkin.tracing.endpoint
+          value: "http://tempo:9411/api/v2/spans"
+        ports:
+        - containerPort: 9006
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: delivery-service-svc
+  labels:
+    app: delivery-service
+spec:
+  selector:
+    app: delivery-service
+  ports:
+  - protocol: TCP
+    port: 9006
+    targetPort: 9006
+  type: LoadBalancer

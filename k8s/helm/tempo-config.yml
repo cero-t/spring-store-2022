@@ -1,0 +1,3 @@
+tempo:
+  receivers:
+    zipkin: # Enable zipkin endpoints (port 9411)

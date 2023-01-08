@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bff-deploy
+  labels:
+    app: bff
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bff
+  template:
+    metadata:
+      labels:
+        app: bff
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9000"
+        prometheus.io/path: /actuator/prometheus
+    spec:
+      containers:
+      - name: bff
+        image: bff:1.0.0
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: store.urls.item
+          value: "http://item-service-svc:9001"
+        - name: store.urls.stock
+          value: "http://stock-service-svc:9002"
+        - name: store.urls.cart
+          value: "http://cart-service-svc:9003"
+        - name: store.urls.order
+          value: "http://order-service-svc:9005"
+        - name: logging.config
+          value: ""
+        - name: management.zipkin.tracing.endpoint
+          value: "http://tempo:9411/api/v2/spans"
+        ports:
+        - containerPort: 9000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bff-svc
+  labels:
+    app: bff
+spec:
+  selector:
+    app: bff
+  ports:
+  - protocol: TCP
+    port: 9000
+    targetPort: 9000
+  type: LoadBalancer
