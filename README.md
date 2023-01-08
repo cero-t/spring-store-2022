@@ -11,8 +11,8 @@
 
 1. Start up RabbitMQ and Grafana stack.
 
-Go to `infra` directory
-`cd infra`
+Go to `docker` directory
+`cd docker`
 
 Run up RabbitMQ and Grafana
 `docker-compose up`
