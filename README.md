@@ -1,4 +1,11 @@
-# Getting Started
+# Spring Microservice Application Example (2022)
+
+## What's this?
+
+- Microservice application example (sorry but headless)
+- Built with Spring Boot 3.0 and partially with Spring Cloud Stream
+- Runnable both locally (with docker-compose) and on k8s
+- Monitored with Grafana, Loki, Tempo with Prometheus and Promtail
 
 ## Run services locally
 
