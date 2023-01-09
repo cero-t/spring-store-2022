@@ -6,5 +6,5 @@ import java.util.List;
 import java.util.Map;
 
 @ConfigurationProperties("store.messaging")
-public record StoreMessagingConfig(Map<String, List<String>> destinations) {
+public record StoreMessaging(Map<String, List<String>> destinations) {
 }

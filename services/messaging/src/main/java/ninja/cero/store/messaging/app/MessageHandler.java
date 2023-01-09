@@ -1,44 +1,36 @@
 package ninja.cero.store.messaging.app;
 
-import ninja.cero.store.messaging.StoreMessagingConfig;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import ninja.cero.store.messaging.StoreMessaging;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.http.MediaType;
 import org.springframework.messaging.Message;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
-import java.util.function.Consumer;
 
-@Configuration
+@Component
 public class MessageHandler {
     WebClient webClient;
 
-    StoreMessagingConfig storeMessagingConfig;
+    StoreMessaging storeMessaging;
 
-    public MessageHandler(WebClient webClient, StoreMessagingConfig storeMessagingConfig) {
+    public MessageHandler(WebClient webClient, StoreMessaging storeMessaging) {
         this.webClient = webClient;
-        this.storeMessagingConfig = storeMessagingConfig;
+        this.storeMessaging = storeMessaging;
     }
 
-    @Bean
-    Consumer<Message<String>> orderProcessConsumer() {
-        return consumer("order-process");
-    }
+    @RabbitListener(queues = "messaging")
+    void listen(Message<String> message) {
+        String type = message.getHeaders().get("type", String.class);
+        List<String> destinations = storeMessaging.destinations().get(type);
 
-    Consumer<Message<String>> consumer(String exchange) {
-        return message -> {
-            List<String> destinations = storeMessagingConfig.destinations().get(exchange);
-
-            destinations.forEach(destination -> {
-                webClient.post()
-                        .uri(destination)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(message.getPayload())
-                        .retrieve()
-                        .toEntity(String.class)
-                        .subscribe();
-            });
-        };
+        destinations.forEach(destination -> webClient.post()
+                .uri(destination)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(message.getPayload())
+                .retrieve()
+                .toEntity(String.class)
+                .subscribe());
     }
 }

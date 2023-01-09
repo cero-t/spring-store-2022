@@ -23,9 +23,9 @@ Go to `docker` directory
 cd docker
 ```
 
-Run up RabbitMQ and Grafana
+Run up RabbitMQ and Grafana stack
 ```
-docker-compose up
+docker-compose up -d
 ```
 
 #### 2. Run applications
@@ -67,6 +67,16 @@ Example of `/order` Post body.
   "cardName": "Shin Tanimoto",
   "cartId": "1"
 }
+```
+
+#### 5. Finish applications
+
+1. Stop each services from your IDE
+
+2. Stop RabbitMQ and Grafana stack
+
+```
+docker-compose down
 ```
 
 ## Run on k8s
@@ -162,3 +172,26 @@ kubectl port-forward svc/bff-svc 9000:9000
   - http://localhost:3000
 
 See [#4-how-to-use-store-application](#4-how-to-use-store-application) for application instruction.
+
+#### 7. Finish applications
+
+1. Undeploy application
+
+```
+kubectl delete -f ./deploy
+```
+
+2. Uninstall middlewares
+
+```
+helm uninstall loki-stack
+```
+```
+helm uninstall tempo
+```
+
+3. Delete namespace (optional)
+
+```
+kubectl delete ns spring-store-2022
+```
