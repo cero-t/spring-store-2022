@@ -37,6 +37,5 @@ public class MessageHandler {
             // ignore
             ex.printStackTrace();
         }
-
     }
 }
