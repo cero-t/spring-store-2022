@@ -52,7 +52,6 @@ Maven's `spring-boot:run` command is unavailable for some reasons.
   - `itemId` should match to one of the ids in `/catalog`.
 4. POST `/order`
   - You can order your item virtually! Don't worry, any card payment or e-mail sending do not happen.
-  - `id` must not be assigned
   - `cardExpire` must be `MM/yy` formart year and month.
 
 Example of `/order` Post body.

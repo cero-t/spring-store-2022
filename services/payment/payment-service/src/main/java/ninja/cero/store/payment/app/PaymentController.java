@@ -1,7 +1,7 @@
 package ninja.cero.store.payment.app;
 
+import ninja.cero.store.order.domain.Order;
 import ninja.cero.store.order.domain.OrderProcess;
-import ninja.cero.store.order.domain.OrderRequest;
 import ninja.cero.store.payment.domain.Payment;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,11 +41,11 @@ public class PaymentController {
     }
 
     @PostMapping("/order")
-    public void processOrder(@RequestBody OrderProcess order) {
-        OrderRequest request = order.orderRequest();
+    public void processOrder(@RequestBody OrderProcess orderProcess) {
+        Order order = orderProcess.order();
 
-        Payment payment = new Payment(null, request.cardName(), request.cardExpire(), request.cardNumber(),
-                order.cartDetail().total());
+        Payment payment = new Payment(null, order.cardName(), order.cardExpire(), order.cardNumber(),
+                orderProcess.cartDetail().total());
         paymentRepository.save(payment);
     }
 }

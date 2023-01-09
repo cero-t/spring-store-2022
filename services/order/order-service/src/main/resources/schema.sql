@@ -1,4 +1,4 @@
-CREATE TABLE order_request
+CREATE TABLE `order`
 (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(256),

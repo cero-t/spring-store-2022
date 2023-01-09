@@ -3,24 +3,23 @@ package ninja.cero.store.order.app;
 import ninja.cero.store.cart.client.CartClient;
 import ninja.cero.store.cart.domain.CartDetail;
 import ninja.cero.store.order.client.OrderProcessClient;
-import ninja.cero.store.order.domain.EventType;
-import ninja.cero.store.order.domain.OrderEvent;
-import ninja.cero.store.order.domain.OrderProcess;
-import ninja.cero.store.order.domain.OrderRequest;
+import ninja.cero.store.order.domain.*;
 import ninja.cero.store.payment.client.PaymentClient;
 import ninja.cero.store.payment.domain.Payment;
 import ninja.cero.store.stock.client.StockClient;
 import ninja.cero.store.stock.domain.Stock;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
 public class OrderController {
-    OrderRequestRepository orderRequestRepository;
+    OrderRepository orderRepository;
 
     OrderEventRepository orderEventRepository;
 
@@ -32,10 +31,10 @@ public class OrderController {
 
     OrderProcessClient orderProcessClient;
 
-    public OrderController(OrderRequestRepository orderRequestRepository, OrderEventRepository orderEventRepository,
+    public OrderController(OrderRepository orderRepository, OrderEventRepository orderEventRepository,
                            StockClient stockClient, CartClient cartClient, PaymentClient paymentClient,
                            OrderProcessClient orderProcessClient) {
-        this.orderRequestRepository = orderRequestRepository;
+        this.orderRepository = orderRepository;
         this.orderEventRepository = orderEventRepository;
         this.stockClient = stockClient;
         this.cartClient = cartClient;
@@ -44,7 +43,7 @@ public class OrderController {
     }
 
     @PostMapping("/")
-    public void createOrder(@RequestBody OrderRequest request, @RequestHeader Map<String, String> headers) {
+    public void createOrder(@RequestBody OrderRequest request) {
         CartDetail cart = cartClient.findCartDetailById(request.cartId());
         if (cart == null) {
             throw new RuntimeException("Cart not found");
@@ -55,7 +54,8 @@ public class OrderController {
         paymentClient.check(payment);
 
         // save order request
-        OrderRequest order = orderRequestRepository.save(request);
+        Order order = orderRepository.save(new Order(null, request.name(), request.address(), request.telephone(),
+                request.mailAddress(), request.cardNumber(), request.cardExpire(), request.cardName(), request.cartId()));
 
         // Keep stock
         List<Stock> keepRequests = cart.items().stream()
@@ -78,8 +78,8 @@ public class OrderController {
     }
 
     @GetMapping("/")
-    public Iterable<OrderRequest> getOrders() {
-        return orderRequestRepository.findAll();
+    public Iterable<Order> getOrders() {
+        return orderRepository.findAll();
     }
 
     @GetMapping("/events")

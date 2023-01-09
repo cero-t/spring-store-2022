@@ -1,9 +1,6 @@
 package ninja.cero.store.order.domain;
 
-import org.springframework.data.annotation.Id;
-
-public record OrderRequest(@Id Long id,
-                           String name,
+public record OrderRequest(String name,
                            String address,
                            String telephone,
                            String mailAddress,
