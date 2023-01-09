@@ -22,15 +22,21 @@ public class MessageHandler {
 
     @RabbitListener(queues = "messaging")
     void listen(Message<String> message) {
-        String type = message.getHeaders().get("type", String.class);
-        List<String> destinations = storeMessaging.destinations().get(type);
+        try {
+            String type = message.getHeaders().get("type", String.class);
+            List<String> destinations = storeMessaging.destinations().get(type);
 
-        destinations.forEach(destination -> webClient.post()
-                .uri(destination)
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(message.getPayload())
-                .retrieve()
-                .toEntity(String.class)
-                .subscribe());
+            destinations.forEach(destination -> webClient.post()
+                    .uri(destination)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(message.getPayload())
+                    .retrieve()
+                    .toEntity(String.class)
+                    .subscribe());
+        } catch (RuntimeException ex) {
+            // ignore
+            ex.printStackTrace();
+        }
+
     }
 }
