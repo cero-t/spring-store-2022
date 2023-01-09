@@ -11,8 +11,6 @@ import ninja.cero.store.payment.client.PaymentClient;
 import ninja.cero.store.payment.domain.Payment;
 import ninja.cero.store.stock.client.StockClient;
 import ninja.cero.store.stock.domain.Stock;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
