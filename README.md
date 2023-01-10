@@ -7,6 +7,32 @@
 - Runnable both locally (with docker-compose) and on k8s
 - Monitored with Grafana, Loki, Tempo with Prometheus and Promtail
 
+Services look like:
+```mermaid
+flowchart LR
+  BFF -->|View catalog| ItemService
+  BFF -->|Operate cart| CartService
+  CartService -->|View items| ItemService
+  CartService -->|Check stocks| StockService
+  BFF -->|Order| OrderService
+  OrderService -->|Keep stock| StockService
+  OrderService -->|Process order| M((Messaging))
+  M -.->|Queue| M
+  M -.->|Settle payment| PaymentService
+  M -.->|Delivery| DeliveryService
+```
+
+Monitoring infrastructure looks like:
+```mermaid
+flowchart LR
+  APPs -->|Metrics| Prometheus
+  APPs -->|Logs| Loki
+  APPs -->|Traces| Tempo
+  Prometheus --- G(Grafana: vizualize)
+  Loki --- G
+  Tempo --- G
+```
+
 ## Run services locally
 
 ### Pre-request
@@ -38,21 +64,22 @@ Maven's `spring-boot:run` command is unavailable for some reasons.
 
 - Swagger UI of BFF
   - http://localhost:9000/swagger-ui.html
-- Grafana UI
-  - http://localhost:3000
 
-#### 4. How to use store application
-
-1. GET `/catalog`
+1. catalog-controller: GET `/catalog`
   - You can get items and prices, images, etc.
-2. POST `/cart`
+2. cart-controller: POST `/cart`
   - You can create your cart and get `cartId`.
-3. POST `/cart/{cartId}`
+3. cart-controller: POST `/cart/{cartId}`
   - You can add item to your cart.
   - `itemId` should match to one of the ids in `/catalog`.
-4. POST `/order`
+4. cart-controller: GET `/cart/{cartId}`
+  - You can check items and total amount in your cart.
+5. order-controller: POST `/order`
   - You can order your item virtually! Don't worry, any card payment or e-mail sending do not happen.
   - `cardExpire` must be `MM/yy` formart year and month.
+  - `cartId` must match the id obtained by POST `/cart`.
+
+#### 4. How to use store application
 
 Example of `/order` Post body.
 ```json
@@ -67,6 +94,10 @@ Example of `/order` Post body.
   "cartId": "1"
 }
 ```
+
+- Grafana UI
+  - http://localhost:3000
+
 
 #### 5. Finish applications
 
@@ -170,18 +201,16 @@ kubectl port-forward svc/bff-svc 9000:9000
 - Grafana UI
   - http://localhost:3000
 
-See [#4-how-to-use-store-application](#4-how-to-use-store-application) for application instruction.
+See [3. Play with applications!](#3-play-with-applications) for application instruction.
 
 #### 7. Finish applications
 
-1. Undeploy application
-
+Undeploy applications
 ```
 kubectl delete -f ./deploy
 ```
 
-2. Uninstall middlewares
-
+Uninstall middlewares
 ```
 helm uninstall loki-stack
 ```
@@ -189,8 +218,7 @@ helm uninstall loki-stack
 helm uninstall tempo
 ```
 
-3. Delete namespace (optional)
-
+Delete namespace (optional)
 ```
 kubectl delete ns spring-store-2022
 ```
