@@ -66,18 +66,18 @@ Maven's `spring-boot:run` command is unavailable for some reasons.
   - http://localhost:9000/swagger-ui.html
 
 1. catalog-controller: GET `/catalog`
-  - You can get items and prices, images, etc.
+    - You can get items and prices, images, etc.
 2. cart-controller: POST `/cart`
-  - You can create your cart and get `cartId`.
+    - You can create your cart and get `cartId`.
 3. cart-controller: POST `/cart/{cartId}`
-  - You can add item to your cart.
-  - `itemId` should match to one of the ids in `/catalog`.
+    - You can add item to your cart.
+    - `itemId` should match to one of the ids in `/catalog`.
 4. cart-controller: GET `/cart/{cartId}`
-  - You can check items and total amount in your cart.
+    - You can check items and total amount in your cart.
 5. order-controller: POST `/order`
-  - You can order your item virtually! Don't worry, any card payment or e-mail sending do not happen.
-  - `cardExpire` must be `MM/yy` formart year and month.
-  - `cartId` must match the id obtained by POST `/cart`.
+    - You can order your item virtually! Don't worry, any card payment or e-mail sending do not happen.
+    - `cardExpire` must be `MM/yy` formart year and month.
+    - `cartId` must match the id obtained by POST `/cart`.
 
 #### 4. How to use store application
 
