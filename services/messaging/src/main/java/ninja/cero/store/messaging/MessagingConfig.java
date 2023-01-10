@@ -32,8 +32,7 @@ public class MessagingConfig implements BeanPostProcessor {
     public Object postProcessAfterInitialization(@NonNull Object bean, @NonNull String beanName) throws BeansException {
         if (bean instanceof RabbitTemplate template) {
             template.setObservationEnabled(true);
-        }
-        if (bean instanceof SimpleRabbitListenerContainerFactory factory) {
+        } else if (bean instanceof SimpleRabbitListenerContainerFactory factory) {
             factory.setObservationEnabled(true);
         }
 
