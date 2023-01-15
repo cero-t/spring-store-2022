@@ -3,6 +3,7 @@ apiVersion: 1
 datasources:
   - name: Prometheus
     type: prometheus
+    uid: prometheus
     access: proxy
     url: http://host.docker.internal:9090
     editable: false
@@ -28,6 +29,8 @@ datasources:
         datasourceUid: 'loki'
       nodeGraph:
         enabled: true
+      serviceMap:
+        datasourceUid: 'prometheus'
   - name: Loki
     type: loki
     uid: loki
