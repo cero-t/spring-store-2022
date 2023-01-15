@@ -1,3 +1,4 @@
 tempo:
+  search_enabled: true
   receivers:
     zipkin: # Enable zipkin endpoints (port 9411)

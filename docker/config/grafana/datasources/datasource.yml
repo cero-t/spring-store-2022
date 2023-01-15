@@ -26,6 +26,8 @@ datasources:
       httpMethod: GET
       tracesToLogs:
         datasourceUid: 'loki'
+      nodeGraph:
+        enabled: true
   - name: Loki
     type: loki
     uid: loki

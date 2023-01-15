@@ -10,3 +10,5 @@ storage:
     backend: local
     local:
       path: /tmp/tempo/blocks
+
+search_enabled: true
